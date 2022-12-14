@@ -1,0 +1,4 @@
+<Bindings>
+	<Binding name="Macro_LibramAura" header="RMACROS">Roids.ExecuteMacroByName("LibramAura");</Binding>
+	<Binding name="Macro_WeapinTwist" header="RMACROS">Roids.ExecuteMacroByName("twist");</Binding>
+</Bindings>

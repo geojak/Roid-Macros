@@ -87,7 +87,8 @@ function Roids.HasDeBuffName(buffName, unit)
     end
     
     local text = getglobal(RoidsTooltip:GetName().."TextLeft1");
-	for i=1, 16 do
+	for i=1, 4 do
+	
 		RoidsTooltip:SetOwner(UIParent, "ANCHOR_NONE");
 		RoidsTooltip:SetUnitDebuff(unit, i);
 		name = text:GetText();
@@ -257,6 +258,33 @@ function Roids.ValidateHp(unit, bigger, amount)
     return powerPercent > tonumber(amount);
 end
 
+-- Checks whether or not the given unit has more or less absolute hp in than the given amount
+-- unit: The unit we're checking
+-- bigger: 1 if the percentage needs to be bigger, 0 if it needs to be lower
+-- amount: The required amount
+-- returns: True or false
+function Roids.ValidateRawHp(unit, bigger, amount)
+    local rawHp = UnitHealth(unit);
+    if bigger == 0 then
+        return rawHp < tonumber(amount);
+    end
+    
+    return rawHp > tonumber(amount);
+end
+
+-- Checks whether or not the given unit has more or less missing hp than the given amount
+-- unit: The unit we're checking
+-- bigger: 1 if the mising raw hp needs to be bigger, 0 if it needs to be less
+-- amount: The required amount
+-- returns: True or false
+function Roids.ValidateMissHp(unit, bigger, amount)
+    local missinghp = UnitHealthMax(unit) - UnitHealth(unit);
+    if bigger == 0 then
+        return missinghp < tonumber(amount);
+    end
+    
+    return missinghp > tonumber(amount);
+end
 -- Checks whether the given creatureType is the same as the target's creature type
 -- creatureType: The type to check
 -- target: The target's unitID
@@ -487,6 +515,14 @@ Roids.Keywords = {
     
     myhp = function(conditionals)
         return Roids.ValidateHp("player", conditionals.myhp.bigger, conditionals.myhp.amount);
+    end,
+	
+	rawhp = function(conditionals)
+        return Roids.ValidateRawHp(conditionals.target, conditionals.rawhp.bigger, conditionals.rawhp.amount);
+    end,
+	
+	misshp = function(conditionals)
+        return Roids.ValidateMissHp(conditionals.target, conditionals.misshp.bigger, conditionals.misshp.amount);
     end,
     
     type = function(conditionals)

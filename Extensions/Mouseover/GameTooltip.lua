@@ -12,12 +12,18 @@ function Extension.SetUnit(_, unit)
     Roids.mouseoverUnit = unit;
 end
 
+function Extension.SetText()
+    Roids.mouseoverUnit = "player";
+	--print(Roids.mouseoverUnit)
+end
+
 
 function Extension.OnClose()
     Roids.mouseoverUnit = nil;
 end
 
 function Extension.OnLoad()
+	Extension.HookMethod(_G["GameTooltip"], "SetText", "SetText");
     Extension.HookMethod(_G["GameTooltip"], "SetUnit", "SetUnit");
     Extension.HookMethod(_G["GameTooltip"], "Hide", "OnClose");
     Extension.HookMethod(_G["GameTooltip"], "FadeOut", "OnClose");

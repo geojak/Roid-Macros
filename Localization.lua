@@ -2,6 +2,9 @@
 	Author: Dennis Werner Garske (DWG)
 	License: MIT License
 ]]
+
+BINDING_HEADER_RMACROS = "Macros";
+
 local _G = _G or getfenv(0);
 local Roids = _G.Roids or {};
 Roids.Locale = GetLocale();

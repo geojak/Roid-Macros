@@ -61,3 +61,19 @@ Roids.TARGET_SlashCmd = function(msg)
     Roids.Hooks.TARGET_SlashCmd(msg);
 end
 SlashCmdList.TARGET = Roids.TARGET_SlashCmd;
+
+
+SLASH_CANCELBUFF1 = "/cancelbuff";
+SlashCmdList.CANCELBUFF = function(msg)
+	Roids.CancelBuff(msg);
+end
+
+SLASH_RI1 = "/ri";
+SlashCmdList.RI = function(msg)
+	ResetInstances();
+end
+
+SLASH_XMOG1 = "/xmog";
+SlashCmdList.XMOG = function(msg)
+	TransmogFrame:Show();
+end

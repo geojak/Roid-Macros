@@ -552,3 +552,23 @@ function SendChatMessage(msg, ...)
     end
     Roids.Hooks.SendChatMessage(msg, unpack(arg));
 end
+
+function Roids.CancelBuff(buffName)
+	if not buffName or buffName == '' then
+        return;
+    end
+	
+	buffName = string.gsub(buffName, "_", " ");
+	
+	for i=0, 24 do
+		RoidsTooltip:SetOwner(UIParent, "ANCHOR_NONE");
+   		RoidsTooltip:SetPlayerBuff(i);
+   		local name = RoidsTooltipTextLeft1:GetText();
+
+		if ( name and string.find(name, buffName) ) then
+			CancelPlayerBuff(i);
+		end
+		RoidsTooltip:Hide();
+    end
+end
+

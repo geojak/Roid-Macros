@@ -337,8 +337,16 @@ end
 -- itemName: The name of the item to look for
 -- returns: The bag number and the slot number if the item has been found. nil otherwhise
 function Roids.FindItem(itemName)
-    RoidsTooltip:SetOwner(WorldFrame, "ANCHOR_NONE");
-    for i = 0, 4 do
+    RoidsTooltip:SetOwner(WorldFrame, "ANCHOR_NONE");   
+	for i = 19, 0, -1 do
+        RoidsTooltip:ClearLines();
+        hasItem = RoidsTooltip:SetInventoryItem("player", i);
+        
+        if hasItem and RoidsTooltipTextLeft1:GetText() == itemName then
+            return -i;
+        end
+    end	
+	for i = 4, 0, -1 do
         for j = 1, GetContainerNumSlots(i) do
             RoidsTooltip:ClearLines();
             RoidsTooltip:SetBagItem(i, j);
@@ -346,19 +354,10 @@ function Roids.FindItem(itemName)
                 return i, j;
             end
         end
-    end
-    
-    for i = 0, 19 do
-        RoidsTooltip:ClearLines();
-        hasItem = RoidsTooltip:SetInventoryItem("player", i);
-        
-        if hasItem and RoidsTooltipTextLeft1:GetText() == itemName then
-            return -i;
-        end
-    end
+    end		
 end
 
--- Attempts to use or equip an item from the player's inventory by a  set of conditionals
+-- Attempts to use or equip an item from the player's inventory by a set of conditionals
 -- msg: The raw message intercepted from a /use or /equip command
 function Roids.DoUse(msg)
     local handled = false;

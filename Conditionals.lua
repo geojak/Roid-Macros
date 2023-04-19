@@ -568,4 +568,25 @@ Roids.Keywords = {
     isnpc = function(conditionals)
         return not UnitIsPlayer(conditionals.isnpc);
     end,
+	
+	cs = function(conditionals)
+		if UnitAffectingCombat("player") and UnitCanAttack("player", "target") then
+			for i=1, 64 do
+				name, stacks = UnitDebuff("target", i) 
+				buffName = "Interface\\Icons\\Spell_Holy_CrusaderStrike"
+				if not name then return true end
+				if string.find(name, buffName) then
+					local text = getglobal(RoidsTooltip:GetName().."TextLeft2");
+					RoidsTooltip:SetOwner(UIParent, "ANCHOR_NONE");
+					RoidsTooltip:SetUnitDebuff("target", i);
+					name = tonumber(string.sub(text:GetText(),38,40))
+					if math.mod(name,30) == 0 then
+						return false 	
+					end
+				end
+			end
+		end
+		
+		return true
+    end,
 };

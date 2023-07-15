@@ -130,6 +130,7 @@ Roids.WeaponTypeNames = {
     Bows = { slot = "RangedSlot", name = Roids.Localized.Bow },
     Thrown = { slot = "RangedSlot", name = Roids.Localized.Thrown },
     Wands = { slot = "RangedSlot", name = Roids.Localized.Wand },
+	TwoHand = { slot = "MainHandSlot", name = Roids.Localized.TwoHand },
 };
 
 -- Checks whether or not the given weaponType is currently equipped
@@ -144,7 +145,7 @@ function Roids.HasWeaponEquipped(weaponType)
     
     local slotName = Roids.WeaponTypeNames[weaponType].slot;
     local localizedName = Roids.WeaponTypeNames[weaponType].name;
-
+	
     local slotId = GetInventorySlotInfo(slotName);
     hasItem = RoidsTooltip:SetInventoryItem("player", slotId);
     if not hasItem then
@@ -296,6 +297,19 @@ function Roids.ValidateCreatureType(creatureType, target)
     return creatureType == targetType or creatureType == englishType;
 end
 
+-- Checks whether or not the swingtimer has more or less time left than the given amount
+-- bigger: 1 if the swing timer needs to be bigger, 0 if it needs to be less
+-- amount: The required amount of time in full milliseconds
+-- returns: True or false
+function Roids.SwingTimer(unit, bigger, amount)
+	local st_in_milliseconds = st_timer * 10
+    if st_timer == nil or st_timer == 0 then return false end
+    if bigger == 0 then
+        return st_in_milliseconds < tonumber(amount);
+    end
+    
+    return st_in_milliseconds > tonumber(amount);
+end
 -- Returns the cooldown of the given spellName or nil if no such spell was found
 function Roids.GetSpellCooldownByName(spellName)
     local checkFor = function(bookType)
@@ -431,6 +445,10 @@ Roids.Keywords = {
     equipped = function(conditionals)
         return Roids.HasWeaponEquipped(conditionals.equipped);
     end,
+	
+	noequipped = function(conditionals)
+        return not Roids.HasWeaponEquipped(conditionals.noequipped);
+    end,
     
     dead = function(conditionals)
         return UnitIsDeadOrGhost(conditionals.target);
@@ -529,16 +547,16 @@ Roids.Keywords = {
         return Roids.ValidateCreatureType(conditionals.type, conditionals.target);
     end,
     
-    cooldown = function(conditionals)
-        local name = string.gsub(conditionals.cooldown, "_", " ");
+    cd = function(conditionals)
+        local name = string.gsub(conditionals.cd, "_", " ");
         local cd = Roids.GetSpellCooldownByName(name);
         if not cd then cd = Roids.GetInventoryCooldownByName(name); end
         if not cd then cd = Roids.GetContainerItemCooldownByName(name) end
         return cd > 0;
     end,
     
-    nocooldown = function(conditionals)
-        local name = string.gsub(conditionals.nocooldown, "_", " ");
+    nocd = function(conditionals)
+        local name = string.gsub(conditionals.nocd, "_", " ");
         local cd = Roids.GetSpellCooldownByName(name);
         if not cd then cd = Roids.GetInventoryCooldownByName(name); end
         if not cd then cd = Roids.GetContainerItemCooldownByName(name) end
@@ -580,7 +598,7 @@ Roids.Keywords = {
 					RoidsTooltip:SetOwner(UIParent, "ANCHOR_NONE");
 					RoidsTooltip:SetUnitDebuff("target", i);
 					name = tonumber(string.sub(text:GetText(),38,40))
-					if math.mod(name,30) == 0 then
+					if name/stacks == 30 then
 						return false 	
 					end
 				end
@@ -588,5 +606,9 @@ Roids.Keywords = {
 		end
 		
 		return true
+    end,
+	
+	st = function(conditionals)
+        return Roids.SwingTimer("player", conditionals.st.bigger, conditionals.st.amount);
     end,
 };

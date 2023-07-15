@@ -25,6 +25,10 @@ SLASH_EQUIPOH1 = "/equipoh";
 
 SlashCmdList.EQUIPOH = Roids.DoEquipOffhand;
 
+SLASH_CLICK1 = "/click";
+
+SlashCmdList.CLICK = Roids.DoClick;
+
 SLASH_UNSHIFT1 = "/unshift";
 
 SlashCmdList.UNSHIFT = Roids.DoUnshift;

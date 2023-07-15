@@ -24,6 +24,7 @@ if Roids.Locale == "enUS" or Roids.Locale == "enGB" then
     Roids.Localized.FistWeapon = "Fist Weapon";
     Roids.Localized.Dagger = "Dagger";
     Roids.Localized.Axe = "Axe";
+	Roids.Localized.TwoHand = "Two-Hand";
     Roids.Localized.Attack = "Attack";
     Roids.Localized.AutoShot = "Auto Shot";
     Roids.Localized.Shoot = "Shoot";

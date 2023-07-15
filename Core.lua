@@ -405,6 +405,24 @@ function Roids.DoEquipOffhand(msg)
     return handled;
 end
 
+-- Attempts to click an button from the player's actionbarui by a set of conditionals
+-- msg: The raw message intercepted from a /click command
+function Roids.DoClick(msg)
+    local handled = false;
+    
+    local action = function(msg)
+        UseAction(msg)
+    end
+    
+    for k, v in pairs(Roids.splitString(msg, ";%s*")) do
+        if Roids.DoWithConditionals(v, action, Roids.FixEmptyTarget, true, action) then
+            handled = true;
+            break;
+        end
+    end
+    return handled;
+end
+
 function Roids.DoUnshift(msg)
     local handled;
     

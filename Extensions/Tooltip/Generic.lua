@@ -123,8 +123,8 @@ function Extension.PLAYER_ENTERING_WORLD()
             end
             
             for _,line in pairs(body) do
-                if string.find(line, "^#showtooltip ") then
-                    local text = string.sub(line, 14);
+                if string.find(line, "^#stt ") then
+                    local text = string.sub(line, 6);
                     if Roids.ParseSpell(text) then
                         return;
                     end

@@ -564,7 +564,7 @@ end
 Roids.Hooks.SendChatMessage = SendChatMessage;
 
 function SendChatMessage(msg, ...)
-    if msg and string.find(msg, "^#showtooltip ") then
+    if msg and string.find(msg, "^#stt ") then
         return;
     end
     Roids.Hooks.SendChatMessage(msg, unpack(arg));

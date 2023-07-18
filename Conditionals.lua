@@ -224,7 +224,7 @@ end
 -- returns: True or false
 function Roids.ValidatePower(unit, bigger, amount)
     local powerPercent = 100 / UnitManaMax(unit) * UnitMana(unit);
-    if bigger == 0 then
+	if bigger == 0 then
         return powerPercent < tonumber(amount);
     end
     
@@ -303,6 +303,7 @@ end
 -- returns: True or false
 function Roids.SwingTimer(unit, bigger, amount)
 	local st_in_milliseconds = st_timer * 10
+	--if st_in_milliseconds then print(st_in_milliseconds) else print("nil") end
     if st_timer == nil or st_timer == 0 then return false end
     if bigger == 0 then
         return st_in_milliseconds < tonumber(amount);
@@ -523,8 +524,8 @@ Roids.Keywords = {
         return Roids.ValidateRawPower(conditionals.target, conditionals.rawpower.bigger, conditionals.rawpower.amount);
     end,
     
-    myrawpower = function(conditionals)
-        return Roids.ValidateRawPower("player", conditionals.myrawpower.bigger, conditionals.myrawpower.amount);
+    mrp = function(conditionals)
+        return Roids.ValidateRawPower("player", conditionals.mrp.bigger, conditionals.mrp.amount);
     end,
     
     hp = function(conditionals)
@@ -587,24 +588,53 @@ Roids.Keywords = {
         return not UnitIsPlayer(conditionals.isnpc);
     end,
 	
-	cs = function(conditionals)
+	fervor = function(conditionals)
 		if UnitAffectingCombat("player") and UnitCanAttack("player", "target") then
 			for i=1, 64 do
 				name, stacks = UnitDebuff("target", i) 
 				buffName = "Interface\\Icons\\Spell_Holy_CrusaderStrike"
-				if not name then return true end
-				if string.find(name, buffName) then
+				if name and string.find(name, buffName) then
 					local text = getglobal(RoidsTooltip:GetName().."TextLeft2");
 					RoidsTooltip:SetOwner(UIParent, "ANCHOR_NONE");
 					RoidsTooltip:SetUnitDebuff("target", i);
 					name = tonumber(string.sub(text:GetText(),38,40))
 					if name/stacks == 30 then
 						return false 	
+					else
+						return true
 					end
 				end
 			end
 		end
 		
+		return true
+    end,
+	
+	cs = function(conditionals)	
+		--ckeck if cs debuff is on the target already
+		for i=1, 64 do
+			name, stacks = UnitDebuff("target", i) 
+			buffName = "Interface\\Icons\\Spell_Holy_CrusaderStrike"
+			if name and string.find(name, buffName) then
+				--cs debuff found, first check if max rank on
+				local text = getglobal(RoidsTooltip:GetName().."TextLeft2");
+				RoidsTooltip:SetOwner(UIParent, "ANCHOR_NONE");
+				RoidsTooltip:SetUnitDebuff("target", i);
+				name = tonumber(string.sub(text:GetText(),38,40))
+				if name/stacks ~= 30 then
+					--low rank on target, need to use max rank --> true
+					return true
+				elseif stacks < 5 then
+					--max rank is on target but not 5 staks yet --> true
+					return true
+				else
+					--max rank is on target and 5 stacks applied, dont need to use more -- > false
+					return false
+				end
+			end
+		end
+		
+		--crusasder strike is not on target, we still need to apply it --> true
 		return true
     end,
 	

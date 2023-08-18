@@ -610,6 +610,28 @@ Roids.Keywords = {
 		return true
     end,
 	
+	nofervor = function(conditionals)
+		if UnitAffectingCombat("player") and UnitCanAttack("player", "target") then
+			for i=1, 64 do
+				name, stacks = UnitDebuff("target", i) 
+				buffName = "Interface\\Icons\\Spell_Holy_CrusaderStrike"
+				if name and string.find(name, buffName) then
+					local text = getglobal(RoidsTooltip:GetName().."TextLeft2");
+					RoidsTooltip:SetOwner(UIParent, "ANCHOR_NONE");
+					RoidsTooltip:SetUnitDebuff("target", i);
+					name = tonumber(string.sub(text:GetText(),38,40))
+					if name/stacks == 30 then
+						return true 	
+					else
+						return false
+					end
+				end
+			end
+		end
+		
+		return false
+    end,
+	
 	cs = function(conditionals)	
 		--ckeck if cs debuff is on the target already
 		for i=1, 64 do
